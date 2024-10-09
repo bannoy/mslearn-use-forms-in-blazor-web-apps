@@ -1,6 +1,8 @@
-@page "/checkout"
+﻿@page "/checkout"
+
+@using BlazingPizza.Services
 @inject OrderState OrderState
-@inject HttpClient HttpClient
+@inject OrdersService OrdersService
 @inject NavigationManager NavigationManager
 
 <div class="main">
@@ -28,21 +30,20 @@
     </div>
 
     <button class="checkout-button btn btn-warning" @onclick="PlaceOrder" disabled=@isSubmitting>
-      Place order
+        Place order
     </button>
 </div>
 
 @code {
     Order Order => OrderState.Order;
+
     bool isSubmitting;
 
     async Task PlaceOrder()
     {
         isSubmitting = true;
-        var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "orders", OrderState.Order);
-        var newOrderId= await response.Content.ReadFromJsonAsync<int>();
+        var newOrderId = await OrdersService.PlaceOrder(OrderState.Order);
         OrderState.ResetOrder();
         NavigationManager.NavigateTo($"myorders/{newOrderId}");
-    } 
-
+    }
 }

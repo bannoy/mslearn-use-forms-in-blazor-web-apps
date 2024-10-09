@@ -1,5 +1,6 @@
 ﻿@page "/myorders"
-@inject HttpClient HttpClient
+@using BlazingPizza.Services
+@inject OrdersService OrdersService
 @inject NavigationManager NavigationManager
 
 <div class="main">
@@ -47,6 +48,6 @@
 
     protected override async Task OnParametersSetAsync()
     {
-      ordersWithStatus = await HttpClient.GetFromJsonAsync<List<OrderWithStatus>>(NavigationManager.BaseUri + "orders");
+        ordersWithStatus = await OrdersService.GetOrders();
     }
 }
